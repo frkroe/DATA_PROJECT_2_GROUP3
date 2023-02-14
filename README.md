@@ -185,7 +185,7 @@ pip install -U -r requirements.txt
 ```
 
 ```
-docker run -e --project_id=<project_id> -e --topic_id=<topic_name> <image_name> 
+docker run -e --project_id=<project_id> -e --topic_name=<topic_name> <image_name> 
 >>>>>>> Stashed changes
 
 ```
