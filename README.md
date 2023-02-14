@@ -118,7 +118,7 @@ Then, [create a Dataflow Flex Template](https://cloud.google.com/dataflow/docs/g
 ```
 gcloud dataflow flex-template build "gs://<BUCKET_NAME>/<TEMPLATE_NAME>.json" \
     --image "gcr.io/<PROJECT_ID>/<FOLDER_NAME>/<IMAGE_NAME>:latest" \
-    --sdk-language "PYTHON" 
+    --sdk-language "PYTHON" \
     --metadata-file "schemas/metadata.json"
 ```
 
@@ -152,7 +152,9 @@ In case a machine is not working properly and the measured data is out of their 
 The **Generator/Publisher** that has been defined in a *Python Script* will simulate the data from our IoT machine sensors. It then inserts the data into a Pub/Sub Topic.
 - Run Data Generator/Publisher in **GCP Cloud Shell**:
 ```
-python3 generator_publisher.py --project_id <PROJECT_ID> --topic_name <INPUT_TOPIC>
+python3 generator_publisher.py \
+--project_id <PROJECT_ID> \
+--topic_name <INPUT_TOPIC>
 ```
 - Alternatively, the Python Script can be **dockerized** in order to simulate multiple Sensora at once.
 
@@ -171,10 +173,7 @@ docker build -t <image_name> .
 - The <project_id> will be replaced by the ID of our project in GCP and the <topic_name> by the topic we want to connect to our data generator.
 
 ```
-docker run \
--e --project_id=<project_id> \
--e --topic_id=<topic_name> \
-<image_name> 
+docker run -e --project_id=<project_id> -e --topic_id=<topic_name> <image_name> 
 
 python generator_publisher.py \
 --<project_id> \
