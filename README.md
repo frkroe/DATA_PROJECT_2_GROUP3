@@ -156,30 +156,32 @@ python3 generator_publisher.py --project_id <PROJECT_ID> --topic_name <INPUT_TOP
 ```
 - Alternatively, the Python Script can be **dockerized** in order to simulate multiple Sensora at once.
 
-**INSERT INSTRUCTUCTIONS HOW TO BUILD & RUN DOCKER**
 To be able to lift the docker containing our image that simulates the sensor's streaming data, the following steps must be followed:
 
-### Build the docker image
--Make sure we are in the correct path, 01_Publishing/generator.
--Once inside the correct folder we launch the command through the sheel to be able to lift the image described in the Dockerfile. Where the <image_name> will be replaced by the name we want to give to the image:
-'''
-docker build -t <image_name> .
-'''
-### Run the container
-- After building the image we are going to raise the container so that it can start generating data to simulate our sensor.
--The <project_id> will be replaced by the ID of our project in GCP and the <topic_name> by the topic we want to connect to our data generator.
+**A.Build the docker image**
+- Make sure we are in the correct path, 01_Publishing/generator.
+- Once inside the correct folder we launch the command through the sheel to be able to lift the image described in the Dockerfile. Where the <image_name> will be replaced by the name we want to give to the image:
 
-'''
+```
+docker build -t <image_name> .
+```
+
+**B.Run the container**
+- After building the image we are going to raise the container so that it can start generating data to simulate our sensor.
+- The <project_id> will be replaced by the ID of our project in GCP and the <topic_name> by the topic we want to connect to our data generator.
+
+```
 docker run -e --project_id=<project_id> -e --topic_id=<topic_name> <image_name> python generator_publisher.py --<project_id> --<topic_name>
 
-'''
-### Dockerize to simulate many sensors
--With the help of the cd command ... navigate back to the 01_Publishing folder where there is a python script with the code to automatically raise and remove docker containers.
--<topcontainers> will be the maximum number of containers we want to have running at once, <elapsedtime> seconds to send the container data and <imagenam> is the docker image that has been created in the previous step.
+```
+**C.Dockerize to simulate many sensors**
+- With the help of the cd command ... navigate back to the 01_Publishing folder where there is a python script with the code to automatically raise and remove docker containers.
+- <topcontainers> will be the maximum number of containers we want to have running at once, <elapsedtime> seconds to send the container data and <imagenam> is the docker image that has been created in the previous step.
 
-'''
+```
 python main.py -t <topcontainers> -e <elapsedtime> -i <imagename>
-'''
+
+```
 
 By now, the data from the machine should be published in GCP and be filled in the table in BigQuery. 
 
