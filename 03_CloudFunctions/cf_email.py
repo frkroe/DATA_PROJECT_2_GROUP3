@@ -51,3 +51,11 @@ def pubsub_to_email(event, context):
     else:
         #No emails are required when status is green, so in this case it simply prints an "OK message" in logs.
         print("No failures detected")
+        
+    # Add the security layer.
+    context = ssl.create_default_context()
+        
+    # Logging into gmail using smtp library, adding the previously stablished security layer and send the email
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+        smtp.login(email_sender, email_password)
+        smtp.sendmail(email_sender, email_receiver, em.as_string())
