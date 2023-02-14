@@ -1,13 +1,12 @@
 ### EDEM MDA Data Project 2 Group 3
 # Process Data with Dataflow
 
+""" Libraries """
 #Import beam libraries
 import apache_beam as beam
-from apache_beam.options.pipeline_options import PipelineOptions
-from apache_beam.transforms.combiners import MeanCombineFn, ToList
-from apache_beam.transforms.core import CombineGlobally
 import apache_beam.transforms.window as window
-from apache_beam.io.gcp.bigquery import parse_table_schema_from_json
+from apache_beam.options.pipeline_options import PipelineOptions
+from apache_beam.transforms.combiners import MeanCombineFn
 from apache_beam.io.gcp import bigquery_tools
 
 #Import common libraries
@@ -17,7 +16,7 @@ import json
 import logging
 import requests
 
-""" Helpful functions """
+""" Helpful functions & DoFn Classes"""
 #Decode PubSub message & convert it in json-format in order to deal with
 def ParsePubSubMessage(message):
     pubsubmessage = message.data.decode('utf-8')
@@ -25,8 +24,7 @@ def ParsePubSubMessage(message):
     logging.info("Receiving message from PubSub:%s", pubsubmessage)
     return row
 
-""" DoFn Classes """
-#DoFn: Extract time, temperature, pressure, motor power from data
+#DoFn 01-03: Extract temperature, pressure, motor power from json and save it as variable
 class agg_temperature(beam.DoFn):
     def process(self, element):
         temperature = element['temperature']
@@ -42,7 +40,8 @@ class agg_pressure(beam.DoFn):
         pressure = element['pressure']
         yield pressure
 
-#DoFn: Add Window ProcessingTime & Status depending if measured value is within the optimum range
+#DoFn 04-06: Add Window ProcessingTime, Status & Notification to previously calculated arithmetic average for temperature, pressure & motor power
+##Save added elements as dictionary, then transform and encode them in order to publish it as message in Pub/Sub
 class status_temp(beam.DoFn):
     def process(self, element):
         if element >= 45 and element <= 47:
@@ -55,7 +54,6 @@ class status_temp(beam.DoFn):
         logging.info("Adding status & its notification: %s", output_json)
         yield output_json.encode('utf-8')
 
-#DoFn: Add Window ProcessingTime & Status depending if measured value is within the optimum range
 class status_pressure(beam.DoFn):
     def process(self, element):
         if element >= 60 and element <= 70:
@@ -68,7 +66,6 @@ class status_pressure(beam.DoFn):
         logging.info("Adding status & its notification: %s", output_json)
         yield output_json.encode('utf-8')
 
-#DoFn: Add Window ProcessingTime & Status depending if measured value is within the optimum range
 class status_mpower(beam.DoFn):
     def process(self, element):
         if element >= 11 and element <= 13:
@@ -109,15 +106,13 @@ def run():
     
     args, pipeline_opts = parser.parse_known_args()
 
-    """ BigQuery Table Schema """
-    #Load schema from /schema folder
+    #Load schema from ./schema folder for BigQuery Table Schema
     with open(args.bigquery_schema_path) as file:
         input_schema = json.load(file)
 
     schema = bigquery_tools.parse_table_schema_from_json(json.dumps(input_schema))
 
-    """ Apache Beam Pipeline """
-    #Pipeline Options
+    #Apache Beam Pipeline Options
     options = PipelineOptions(pipeline_opts, save_main_session=True, streaming=True, project=args.project_id)
 
     #Create the pipeline: 
@@ -136,7 +131,7 @@ def run():
             write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND
         ))
 
-        #Part03: Calculate the mean of temperature per minute and put that data with its related status into PubSub
+        #Part03: Calculate the mean of extracted temperature per minute (with/in fixed window) and publish that data with its related status to PubSub
         (data 
             | "Temp: Get value" >> beam.ParDo(agg_temperature())
             | "Temp: WindowByMinute" >> beam.WindowInto(window.FixedWindows(60))
@@ -145,7 +140,7 @@ def run():
             | "Temp: WriteToPubSub" >>  beam.io.WriteToPubSub(topic=f"projects/{args.project_id}/topics/{args.output_topic}", with_attributes=False)
         )
 
-        #Part04: Calculate the mean of pressure per minute and put that data with its related status into PubSub
+        #Part04: Calculate the mean of extracted pressure per minute (with/in fixed window) and publish that data with its related status to PubSub
         (data 
             | "Pressure: Get value" >> beam.ParDo(agg_pressure())
             | "Pressure: WindowByMinute" >> beam.WindowInto(window.FixedWindows(60))
@@ -154,7 +149,7 @@ def run():
             | "Pressure: WriteToPubSub" >>  beam.io.WriteToPubSub(topic=f"projects/{args.project_id}/topics/{args.output_topic}", with_attributes=False)
         )
         
-        #Part05: Calculate the mean of motor power per minute and put that data with its related status into PubSub
+        #Part05: Calculate the mean of extracted motor power per minute (with/in fixed window) and publish that data with its related status to PubSub
         (data 
             | "MPower: Get motor power value" >> beam.ParDo(agg_motorpower())
             | "MPower: WindowByMinute" >> beam.WindowInto(window.FixedWindows(60))
@@ -162,7 +157,8 @@ def run():
             | "MPower: Add Add Status & WindowProcessingTime" >>  beam.ParDo(status_mpower())
             | "MPower: WriteToPubSub" >>  beam.io.WriteToPubSub(topic=f"projects/{args.project_id}/topics/{args.output_topic}", with_attributes=False)
         )
-#Run generator process (for writing data to BigQuery & to second/output PubSub Topic inkl. logging)
+
+#Run Dataflow Process
 if __name__ == '__main__':
     logging.getLogger().setLevel(logging.INFO)
     run()

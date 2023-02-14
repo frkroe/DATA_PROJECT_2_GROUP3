@@ -13,7 +13,7 @@ Data Project 2 | EDEM 2022/2023
 
 ## Data Architecture & Setup 
 ### Data Architecture
-<img src="./00_img/architecture.jpg" width="700"/>
+<img src="./00_Info_Material/architecture.jpg" width="700"/>
 
 ### Google Cloud Platform (GCP)
 - [Google Cloud Platform - Free trial](https://console.cloud.google.com/freetrial)
@@ -171,16 +171,25 @@ docker build -t <image_name> .
 - The <project_id> will be replaced by the ID of our project in GCP and the <topic_name> by the topic we want to connect to our data generator.
 
 ```
-docker run -e --project_id=<project_id> -e --topic_id=<topic_name> <image_name> python generator_publisher.py --<project_id> --<topic_name>
+docker run \
+-e --project_id=<project_id> \
+-e --topic_id=<topic_name> \
+<image_name> 
 
+python generator_publisher.py \
+--<project_id> \
+--<topic_name>
 ```
 **C.Dockerize to simulate many sensors**
 - With the help of the cd command ... navigate back to the 01_Publishing folder where there is a python script with the code to automatically raise and remove docker containers.
 - <topcontainers> will be the maximum number of containers we want to have running at once, <elapsedtime> seconds to send the container data and <imagenam> is the docker image that has been created in the previous step.
 
 ```
-python main.py -t <topcontainers> -e <elapsedtime> -i <imagename>
+pip install -U -r requirements.txt
+```
 
+```
+python main.py -t <topcontainers> -e <elapsedtime> -i <imagename>
 ```
 
 By now, the data from the machine should be published in GCP and be filled in the table in BigQuery. 
@@ -189,38 +198,5 @@ By now, the data from the machine should be published in GCP and be filled in th
 - Go to [**Looker Studio**](https://lookerstudio.google.com/u/0/). Link your BigQuery table.
 - Create a Dashboard as shown below, which represents temperature and pressure and the motor power of the machine.
 
-<img src="00_img/INSERT-PIC-LINK" width="700"/>
-
---
-
-
 ## Video
 - [DATA PROJECT 2 GROUP 3](INSERT VIDEO LINK)
-
-## Libraries 
-
-**datetime**: Used to create and manipulate date/time objects. In our case, returning the exact time at the moment of execution and time zone.
-
-logging: The library is widely used for debugging, tracking changes, and understanding the behavior of a program
-
-**random**: Library used to generate random values, in our case, creating data for our mock sensors.
-
-**os**: It is a portable way of interacting with the underlying operating system, allowing your Python code to run on multiple platforms without modification.
-
-**ssl**: SSJ stands for Secure Sockets Layer. It is used to stablish a secure encrypted connection between devices over a network where others could be “spying” on the communication.
-
-**time**: A designated library to interact with time, such as the sleep function which we used to set intervals in our data stream.
-
-**json**: As its name says, this is a library we used to work with JSON files. We used to json.dumps to convert/write python objects into a json string.
-
-**api**: Just like the previous library, this library is also quite self-explanatory. As it’s used to interact with APIs, and in our case, to simulate one iterating rows our data.
-
-**jw**: JWT stands for JSON Web Token
-
-**paho.mqtt**: MQTT is a publish/subscribe messaging 
-
-**base64**: Base64 is a method of encoding binary data into ASCII text, so that it can be transmitted or stored in a text-based format.
-
-**argparse**: It helps you write code to parse command-line arguments and options, and provides useful error messages and help text for users. With argparse, you can specify the arguments and options your script should accept, and the module will automatically generate a parser that can interpret the arguments passed to your script.
-
-**uuid**: The uuid library in Python is a module that provides the ability to generate UUIDs (Universally Unique Identifiers), as well as various utility functions for working with UUIDs.
