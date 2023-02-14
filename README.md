@@ -139,14 +139,13 @@ In case a machine is not working properly and the measured data is out of their 
 **INSERT INSTRUCTIONS ON HOW TO SET-UP CF**
 
 **Aqui tienes el ejemplo de Javi, Fancito:**
-- Go to [CloudFunctions folder]() and follow the instructions placed in edemCloudFunctions.py file.
-- Go to Cloud Console [Cloud Functions](https://console.cloud.google.com/functions) page.
-- Click **Create Function** (europe-west1) and choose **PubSub** as trigger type and click **save**.
-- Click **Next** and choose **Python 3.9** as runtime.
-- Copy your code into Main.py file and python dependencies into requirements.txt.
-- when finished, Click **deploy**.
-- If an aggregate temperature by minute is out-of-range, **a command will be thrown to the device and its config will be updated**. You can check that by going to *config and state* tab in IoT device page.
-- Useful information: [IoT Core code samples](https://cloud.google.com/iot/docs/samples)
+	
+- Click Create Function, select the most convenient region depending of the user and choose PubSub as trigger type and click save. 
+- Click Next and choose Python 3.10 as runtime.
+- Copy your code into Main.py file and python dependencies into requirements.txt. In our case, we didn’t need any external library, so our requirements remained empty.
+- Last but not least, introduce the main function in the python code as the function’s entry point,
+- When finished, Click deploy.
+- The function will now start listening for message entries once the function is deployed. The email’s content will vary depending of the message body written in the Pub/Sub message.
 
 ### 8. Run Data Generator/Publisher
 The **Generator/Publisher** that has been defined in a *Python Script* will simulate the data from our IoT machine sensors. It then inserts the data into a Pub/Sub Topic.
