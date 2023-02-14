@@ -168,16 +168,36 @@ docker build -t <image_name> .
 
 **B.Run the container**
 - After building the image we are going to raise the container so that it can start generating data to simulate our sensor.
+- Go to another sheell,remember to re-enter to the environment:
+
+```
+source edem/bin/activate
+
+```
+
 - The <project_id> will be replaced by the ID of our project in GCP and the <topic_name> by the topic we want to connect to our data generator.
 
 ```
+<<<<<<< Updated upstream
 docker run -e --project_id=<project_id> -e --topic_id=<topic_name> <image_name> python generator_publisher.py --<project_id> --<topic_name>
+=======
+pip install -U -r requirements.txt
+```
+
+```
+docker run -e --project_id=<project_id> -e --topic_id=<topic_name> <image_name> 
+>>>>>>> Stashed changes
 
 ```
 **C.Dockerize to simulate many sensors**
 - With the help of the cd command ... navigate back to the 01_Publishing folder where there is a python script with the code to automatically raise and remove docker containers.
 - <topcontainers> will be the maximum number of containers we want to have running at once, <elapsedtime> seconds to send the container data and <imagenam> is the docker image that has been created in the previous step.
 
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
 ```
 python main.py -t <topcontainers> -e <elapsedtime> -i <imagename>
 
