@@ -52,12 +52,15 @@ gcloud services enable cloudfunctions.googleapis.com
 - Create *Python environment*:
 ```
 virtualenv -p python3 <ENVIRONTMENT_NAME>
+
 source <ENVIRONMENT_NAME>/bin/activate
 ```
 
 - Install *Python dependencies*:
 ```
 pip3 install -U -r setup_dependencies.txt
+
+pip3 install apache-beam[gcp]
 ```
 
 ### 2. Create Topics with PubSub
@@ -68,6 +71,7 @@ First of all, we will create two **Topics** and their default **Subscriptions** 
 - Creating a topic and its subscription can also be performed via the terminal with the following command:
 ```
 gcloud pubsub topics create <TOPIC_NAME> --project <PROJECT_ID>
+
 gcloud pubsub subscriptions create <SUBSCRIPTION_NAME> --topic <TOPIC_NAME> <PROJECT_ID>
 ```
 
@@ -75,6 +79,7 @@ gcloud pubsub subscriptions create <SUBSCRIPTION_NAME> --topic <TOPIC_NAME> <PRO
 In order to store the Dataflow Flex template, a bucket needs to be created. 
 - Go to the Cloud Console [Cloud Storage](https://console.cloud.google.com/storage) page. Create a **bucket** specifying a global unique name, selecting EU (multiple regions) as location and leaving the other settings as default.
 - Creating a bucket can also be performed via the terminal:
+
 ```
 gcloud storage buckets create gs://<BUCKET_NAME> \
 --project <PROJECT_ID> \
@@ -132,6 +137,7 @@ gcloud dataflow flex-template run "<DATAFLOW_JOB_NAME>" \
     --parameters output_bigquery="<DATASET>.<TABLE>" \
     --region "europe-west1" 
 ```
+
 ### 7. Create  the script to send emails with Cloud Function
 In case a machine is not working properly and the measured data is out of their optimum ranges, an email will be sent to the people indicated in a *Python Script*. 
 
@@ -157,7 +163,7 @@ To be able to lift the docker containing our image that simulates the sensor's s
 
 **A.Build the docker image**
 - Make sure we are in the correct path, 01_Publishing/generator.
-- Once inside the correct folder we launch the command through the sheel to be able to lift the image described in the Dockerfile. Where the <image_name> will be replaced by the name we want to give to the image:
+- Once inside the correct folder we launch the command through the sheel to be able to lift the image described in the Dockerfile. Where the <IMAGE_NAME> will be replaced by the name we want to give to the image:
 
 ```
 docker build -t <image_name> .
@@ -165,25 +171,25 @@ docker build -t <image_name> .
 
 **B.Run the container**
 - After building the image we are going to raise the container so that it can start generating data to simulate our sensor.
-- The <project_id> will be replaced by the ID of our project in GCP and the <topic_name> by the topic we want to connect to our data generator.
+- The <PROJECT_ID> will be replaced by the ID of our project in GCP and the <TOPIC_NAME> by the topic we want to connect to our data generator.
 
 ```
-docker run -e --project_id=<project_id> -e --topic_id=<topic_name> <image_name> 
-
+docker run -e --project_id=<project_id> -e --topic_id=<TOPIC_NAME> <IMAGE_NAME> \
 python generator_publisher.py \
---<project_id> \
---<topic_name>
+--project_id=<PROJECT_ID> \
+--topic_name=<TOPIC_NAME>
 ```
+
 **C.Dockerize to simulate many sensors**
 - With the help of the cd command ... navigate back to the 01_Publishing folder where there is a python script with the code to automatically raise and remove docker containers.
-- <topcontainers> will be the maximum number of containers we want to have running at once, <elapsedtime> seconds to send the container data and <imagenam> is the docker image that has been created in the previous step.
+- <TOPCONTAINERS> will be the maximum number of containers we want to have running at once, <ELAPSEDTIME> seconds to send the container data and <<IMAGENAME> is the docker image that has been created in the previous step.
 
 ```
 pip install -U -r requirements.txt
 ```
 
 ```
-python main.py -t <topcontainers> -e <elapsedtime> -i <imagename>
+python main.py -t <TOPCONTAINERS> -e <ELAPSEDTIME> -i <IMAGENAME>
 ```
 
 By now, the data from the machine should be published in GCP and be filled in the table in BigQuery. 
