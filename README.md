@@ -2,7 +2,7 @@
 # IoT Serverless real-time architecture
 Data Project 2 | EDEM 2022/2023 | Group 3 
 
-*Sara Adam, María García, Franzi Kröger, Javi Riaza, Fan Wu*
+*Sara Adam, Maria Garcia, Franzi Kröger, Javi Riaza, Fan Wu*
 
 ## Introduction
 ### Case Description
@@ -202,5 +202,6 @@ By now, the data from the machine should be published in GCP and be filled in th
 - Go to [**Looker Studio**](https://lookerstudio.google.com/u/0/). Link your BigQuery table.
 - Create a Dashboard as shown below, which represents temperature and pressure and the motor power of the machine.
 
-## Video
-- [DATA PROJECT 2 GROUP 3](INSERT VIDEO LINK)
+## Extra Info Material
+- [DP2 - Group 3 - Video](https://www.youtube.com/watch?v=-SWrevOlvG0)
+- [DP2 - Group 3 - Presentation](https://www.canva.com/design/DAFakp5uNwE/9f7Bl-iTAMy9VGqzRAKetQ/view?utm_content=DAFakp5uNwE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
