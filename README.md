@@ -1,12 +1,14 @@
 ![Logo](https://n3m5z7t4.rocketcdn.me/wp-content/plugins/edem-shortcodes/public/img/logo-Edem.png)
 # IoT Serverless real-time architecture
-Data Project 2 | EDEM 2022/2023
+Data Project 2 | EDEM 2022/2023 | Group 3 
 
-## Introdution
-### Case description
+*Sara Adam, María García, Franzi Kröger, Javi Riaza, Fan Wu*
+
+## Introduction
+### Case Description
 **DEXTROSA S.A** is a provider producing sugar. One of its many challenges is identifying failures in the production as soon as possible in order to reduce the time-out of their machines. To achieve this challenge, they have launched with IoT sensors  equipped machines to monitor the **temperature**,  **absolute pressure** and its **motor power** in order to regulate the optimal conditions for the production.
 
-### Business challenge
+### Business Challenge
 - You must think of an IoT product, develop it, simulate its use and present it as SaaS.
 - The solution must be scalable, open source and cloud.
 
@@ -140,7 +142,7 @@ gcloud dataflow flex-template run "<DATAFLOW_JOB_NAME>" \
     --region "europe-west1" 
 ```
 
-### 7. Create  the script to send emails with Cloud Function
+### 7. Create the script to send emails with Cloud Function
 In case a machine is not working properly and the measured data is out of their optimum ranges, an email will be sent to the people indicated in a *Python Script*. 
 
 - Go to CloudFunctions folder and follow the instructions placed in edemCloudFunctions.py file.
