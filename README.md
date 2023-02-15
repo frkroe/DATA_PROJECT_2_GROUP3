@@ -4,7 +4,7 @@ Data Project 2 | EDEM 2022/2023
 
 ## Introdution
 ### Case description
-**Company Name** is a provider producing sugar. One of its many challenges is identifying failures in the production as soon as possible in order to reduce the time-out of their machines. To achieve this challenge, they have launched with IoT sensors  equipped machines to monitor the **temperature** and **absolute pressure** in order to regulate the optimal conditions for the production.
+**Company Name** is a provider producing sugar. One of its many challenges is identifying failures in the production as soon as possible in order to reduce the time-out of their machines. To achieve this challenge, they have launched with IoT sensors  equipped machines to monitor the **temperature**,  **absolute pressure** and its **motor power** in order to regulate the optimal conditions for the production.
 
 ### Business challenge
 - You must think of an IoT product, develop it, simulate its use and present it as SaaS.
@@ -136,17 +136,13 @@ gcloud dataflow flex-template run "<DATAFLOW_JOB_NAME>" \
 ### 7. Create  the script to send emails with Cloud Function
 In case a machine is not working properly and the measured data is out of their optimum ranges, an email will be sent to the people indicated in a *Python Script*. 
 
-**INSERT INSTRUCTIONS ON HOW TO SET-UP CF**
-
-**Aqui tienes el ejemplo de Javi, Fancito:**
-- Go to [CloudFunctions folder]() and follow the instructions placed in edemCloudFunctions.py file.
+- Go to CloudFunctions folder and follow the instructions placed in edemCloudFunctions.py file.
 - Go to Cloud Console [Cloud Functions](https://console.cloud.google.com/functions) page.
 - Click **Create Function** (europe-west1) and choose **PubSub** as trigger type and click **save**.
 - Click **Next** and choose **Python 3.9** as runtime.
 - Copy your code into Main.py file and python dependencies into requirements.txt.
-- when finished, Click **deploy**.
+- When finished, click **deploy**.
 - If an aggregate temperature by minute is out-of-range, **a command will be thrown to the device and its config will be updated**. You can check that by going to *config and state* tab in IoT device page.
-- Useful information: [IoT Core code samples](https://cloud.google.com/iot/docs/samples)
 
 ### 8. Run Data Generator/Publisher
 The **Generator/Publisher** that has been defined in a *Python Script* will simulate the data from our IoT machine sensors. It then inserts the data into a Pub/Sub Topic.
