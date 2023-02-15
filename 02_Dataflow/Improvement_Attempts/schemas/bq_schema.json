@@ -1,0 +1,29 @@
+{
+    "fields": [
+    {
+      "mode": "NULLABLE",
+      "name": "id",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "time",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "motor_power",
+      "type": "NUMERIC"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "pressure",
+      "type": "NUMERIC"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "temperature",
+      "type": "NUMERIC"
+    }
+    ]
+}

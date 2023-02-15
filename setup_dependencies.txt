@@ -1,0 +1,4 @@
+PyJWT
+paho-mqtt
+cryptography
+pandas

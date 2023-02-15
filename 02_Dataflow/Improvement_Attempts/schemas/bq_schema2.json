@@ -1,0 +1,54 @@
+{
+    "fields": [
+    {
+      "mode": "NULLABLE",
+      "name": "time",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "temp_mean",
+      "type": "NUMERIC"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "pressure_mean",
+      "type": "NUMERIC"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "m_mean",
+      "type": "NUMERIC"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "temp_status",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "pressure_status",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "m_status",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "temp_notification",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "pressure_notification",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "m_status",
+      "type": "STRING"
+    }
+    ]
+}

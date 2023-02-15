@@ -1,0 +1,26 @@
+{
+    "name": "Streaming beam Python flex template",
+    "description": "Streaming beam example for python flex template.",
+    "parameters": [
+      {
+        "name": "project_id",
+        "label": "Google Cloud Project ID.",
+        "helpText": "Name of the Project ID"
+      },
+      {
+        "name": "input_subscription",
+        "label": "Input PubSub subscription.",
+        "helpText": "Name of the input PubSub subscription to consume from."
+      },      
+      {
+        "name": "output_topic",
+        "label": "Output PubSub.",
+        "helpText": "Name of the ouput PubSub Topic."
+      },
+      {
+        "name": "output_bigquery",
+        "label": "BigQuery output table name.",
+        "helpText": "Name of the BigQuery output table name."
+      }
+    ]
+  }
