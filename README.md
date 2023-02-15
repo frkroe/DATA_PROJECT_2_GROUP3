@@ -10,8 +10,6 @@ Data Project 2 | EDEM 2022/2023
 - You must think of an IoT product, develop it, simulate its use and present it as SaaS.
 - The solution must be scalable, open source and cloud.
 
-![IoT](https://www.avnet.com/wps/wcm/connect/onesite/2bc09816-e42e-4b7b-933d-62b7bb366ddb/IoT-Infographic-animation-update-1530x601.gif?MOD=AJPERES&CACHEID=ROOTWORKSPACE.Z18_NA5A1I41L0ICD0ABNDMDDG0000-2bc09816-e42e-4b7b-933d-62b7bb366ddb-ohStJit)
-
 ## Data Architecture & Setup 
 ### Data Architecture
 <img src="./00_Info_Material/architecture.jpg" width="700"/>
