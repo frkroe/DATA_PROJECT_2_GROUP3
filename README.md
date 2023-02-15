@@ -4,16 +4,15 @@ Data Project 2 | EDEM 2022/2023
 
 ## Introdution
 ### Case description
-**Company Name** is a provider producing sugar. One of its many challenges is identifying failures in the production as soon as possible in order to reduce the time-out of their machines. To achieve this challenge, they have launched with IoT sensors  equipped machines to monitor the **temperature** and **absolute pressure** in order to regulate the optimal conditions for the production.
+**DEXTROSA S.A** is a provider producing sugar. One of its many challenges is identifying failures in the production as soon as possible in order to reduce the time-out of their machines. To achieve this challenge, they have launched with IoT sensors  equipped machines to monitor the **temperature**,  **absolute pressure** and its **motor power** in order to regulate the optimal conditions for the production.
 
 ### Business challenge
 - You must think of an IoT product, develop it, simulate its use and present it as SaaS.
 - The solution must be scalable, open source and cloud.
 
-
 ## Data Architecture & Setup 
 ### Data Architecture
-<img src="./00_img/architecture.jpg" width="700"/>
+<img src="./00_Info_Material/architecture.jpg" width="700"/>
 
 ### Google Cloud Platform (GCP)
 - [Google Cloud Platform - Free trial](https://console.cloud.google.com/freetrial)
@@ -53,12 +52,15 @@ gcloud services enable cloudfunctions.googleapis.com
 - Create *Python environment*:
 ```
 virtualenv -p python3 <ENVIRONTMENT_NAME>
+
 source <ENVIRONMENT_NAME>/bin/activate
 ```
 
 - Install *Python dependencies*:
 ```
 pip3 install -U -r setup_dependencies.txt
+
+pip3 install apache-beam[gcp]
 ```
 
 ### 2. Create Topics with PubSub
@@ -69,6 +71,7 @@ First of all, we will create two **Topics** and their default **Subscriptions** 
 - Creating a topic and its subscription can also be performed via the terminal with the following command:
 ```
 gcloud pubsub topics create <TOPIC_NAME> --project <PROJECT_ID>
+
 gcloud pubsub subscriptions create <SUBSCRIPTION_NAME> --topic <TOPIC_NAME> <PROJECT_ID>
 ```
 
@@ -76,6 +79,7 @@ gcloud pubsub subscriptions create <SUBSCRIPTION_NAME> --topic <TOPIC_NAME> <PRO
 In order to store the Dataflow Flex template, a bucket needs to be created. 
 - Go to the Cloud Console [Cloud Storage](https://console.cloud.google.com/storage) page. Create a **bucket** specifying a global unique name, selecting EU (multiple regions) as location and leaving the other settings as default.
 - Creating a bucket can also be performed via the terminal:
+
 ```
 gcloud storage buckets create gs://<BUCKET_NAME> \
 --project <PROJECT_ID> \
@@ -118,7 +122,7 @@ Then, [create a Dataflow Flex Template](https://cloud.google.com/dataflow/docs/g
 ```
 gcloud dataflow flex-template build "gs://<BUCKET_NAME>/<TEMPLATE_NAME>.json" \
     --image "gcr.io/<PROJECT_ID>/<FOLDER_NAME>/<IMAGE_NAME>:latest" \
-    --sdk-language "PYTHON" 
+    --sdk-language "PYTHON" \
     --metadata-file "schemas/metadata.json"
 ```
 
@@ -133,26 +137,25 @@ gcloud dataflow flex-template run "<DATAFLOW_JOB_NAME>" \
     --parameters output_bigquery="<DATASET>.<TABLE>" \
     --region "europe-west1" 
 ```
+
 ### 7. Create  the script to send emails with Cloud Function
 In case a machine is not working properly and the measured data is out of their optimum ranges, an email will be sent to the people indicated in a *Python Script*. 
 
-**INSERT INSTRUCTIONS ON HOW TO SET-UP CF**
-
-**Aqui tienes el ejemplo de Javi, Fancito:**
-- Go to [CloudFunctions folder]() and follow the instructions placed in edemCloudFunctions.py file.
+- Go to CloudFunctions folder and follow the instructions placed in edemCloudFunctions.py file.
 - Go to Cloud Console [Cloud Functions](https://console.cloud.google.com/functions) page.
 - Click **Create Function** (europe-west1) and choose **PubSub** as trigger type and click **save**.
 - Click **Next** and choose **Python 3.9** as runtime.
 - Copy your code into Main.py file and python dependencies into requirements.txt.
-- when finished, Click **deploy**.
+- When finished, click **deploy**.
 - If an aggregate temperature by minute is out-of-range, **a command will be thrown to the device and its config will be updated**. You can check that by going to *config and state* tab in IoT device page.
-- Useful information: [IoT Core code samples](https://cloud.google.com/iot/docs/samples)
 
 ### 8. Run Data Generator/Publisher
 The **Generator/Publisher** that has been defined in a *Python Script* will simulate the data from our IoT machine sensors. It then inserts the data into a Pub/Sub Topic.
 - Run Data Generator/Publisher in **GCP Cloud Shell**:
 ```
-python3 generator_publisher.py --project_id <PROJECT_ID> --topic_name <INPUT_TOPIC>
+python3 generator_publisher.py \
+--project_id <PROJECT_ID> \
+--topic_name <INPUT_TOPIC>
 ```
 - Alternatively, the Python Script can be **dockerized** in order to simulate multiple Sensora at once.
 
@@ -160,7 +163,7 @@ To be able to lift the docker containing our image that simulates the sensor's s
 
 **A.Build the docker image**
 - Make sure we are in the correct path, 01_Publishing/generator.
-- Once inside the correct folder we launch the command through the sheel to be able to lift the image described in the Dockerfile. Where the <image_name> will be replaced by the name we want to give to the image:
+- Once inside the correct folder we launch the command through the sheel to be able to lift the image described in the Dockerfile. Where the <IMAGE_NAME> will be replaced by the name we want to give to the image:
 
 ```
 docker build -t <image_name> .
@@ -168,79 +171,32 @@ docker build -t <image_name> .
 
 **B.Run the container**
 - After building the image we are going to raise the container so that it can start generating data to simulate our sensor.
-- Go to another sheell,remember to re-enter to the environment:
+- The <PROJECT_ID> will be replaced by the ID of our project in GCP and the <TOPIC_NAME> by the topic we want to connect to our data generator.
 
 ```
-source edem/bin/activate
-
+docker run -e --project_id=<project_id> -e --topic_id=<TOPIC_NAME> <IMAGE_NAME> \
+python generator_publisher.py \
+--project_id=<PROJECT_ID> \
+--topic_name=<TOPIC_NAME>
 ```
 
-- The <project_id> will be replaced by the ID of our project in GCP and the <topic_name> by the topic we want to connect to our data generator.
+**C.Dockerize to simulate many sensors**
+- With the help of the cd command ... navigate back to the 01_Publishing folder where there is a python script with the code to automatically raise and remove docker containers.
+- <TOPCONTAINERS> will be the maximum number of containers we want to have running at once, <ELAPSEDTIME> seconds to send the container data and <<IMAGENAME> is the docker image that has been created in the previous step.
 
 ```
-<<<<<<< Updated upstream
-docker run -e --project_id=<project_id> -e --topic_id=<topic_name> <image_name> python generator_publisher.py --<project_id> --<topic_name>
-=======
 pip install -U -r requirements.txt
 ```
 
 ```
-docker run -e --project_id=<project_id> -e --topic_name=<topic_name> <image_name> 
->>>>>>> Stashed changes
-
-```
-**C.Dockerize to simulate many sensors**
-- With the help of the cd command ... navigate back to the 01_Publishing folder where there is a python script with the code to automatically raise and remove docker containers.
-- <topcontainers> will be the maximum number of containers we want to have running at once, <elapsedtime> seconds to send the container data and <imagenam> is the docker image that has been created in the previous step.
-
-<<<<<<< Updated upstream
-=======
-
-
->>>>>>> Stashed changes
-```
-python main.py -t <topcontainers> -e <elapsedtime> -i <imagename>
-
+python main.py -t <TOPCONTAINERS> -e <ELAPSEDTIME> -i <IMAGENAME>
 ```
 
 By now, the data from the machine should be published in GCP and be filled in the table in BigQuery. 
 
-### 7. Visualize data from BigQuery with Looker Studio
+### 9. Visualize data from BigQuery with Looker Studio
 - Go to [**Looker Studio**](https://lookerstudio.google.com/u/0/). Link your BigQuery table.
 - Create a Dashboard as shown below, which represents temperature and pressure and the motor power of the machine.
 
-<img src="00_img/INSERT-PIC-LINK" width="700"/>
-
---
-
-
 ## Video
 - [DATA PROJECT 2 GROUP 3](INSERT VIDEO LINK)
-
-## Libraries 
-
-**datetime**: Used to create and manipulate date/time objects. In our case, returning the exact time at the moment of execution and time zone.
-
-logging: The library is widely used for debugging, tracking changes, and understanding the behavior of a program
-
-**random**: Library used to generate random values, in our case, creating data for our mock sensors.
-
-**os**: It is a portable way of interacting with the underlying operating system, allowing your Python code to run on multiple platforms without modification.
-
-**ssl**: SSJ stands for Secure Sockets Layer. It is used to stablish a secure encrypted connection between devices over a network where others could be “spying” on the communication.
-
-**time**: A designated library to interact with time, such as the sleep function which we used to set intervals in our data stream.
-
-**json**: As its name says, this is a library we used to work with JSON files. We used to json.dumps to convert/write python objects into a json string.
-
-**api**: Just like the previous library, this library is also quite self-explanatory. As it’s used to interact with APIs, and in our case, to simulate one iterating rows our data.
-
-**jw**: JWT stands for JSON Web Token
-
-**paho.mqtt**: MQTT is a publish/subscribe messaging 
-
-**base64**: Base64 is a method of encoding binary data into ASCII text, so that it can be transmitted or stored in a text-based format.
-
-**argparse**: It helps you write code to parse command-line arguments and options, and provides useful error messages and help text for users. With argparse, you can specify the arguments and options your script should accept, and the module will automatically generate a parser that can interpret the arguments passed to your script.
-
-**uuid**: The uuid library in Python is a module that provides the ability to generate UUIDs (Universally Unique Identifiers), as well as various utility functions for working with UUIDs.
