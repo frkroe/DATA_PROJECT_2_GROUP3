@@ -4,7 +4,7 @@ Data Project 2 | EDEM 2022/2023
 
 ## Introdution
 ### Case description
-**Company Name** is a provider producing sugar. One of its many challenges is identifying failures in the production as soon as possible in order to reduce the time-out of their machines. To achieve this challenge, they have launched with IoT sensors  equipped machines to monitor the **temperature**,  **absolute pressure** and its **motor power** in order to regulate the optimal conditions for the production.
+**DEXTROSA S.A** is a provider producing sugar. One of its many challenges is identifying failures in the production as soon as possible in order to reduce the time-out of their machines. To achieve this challenge, they have launched with IoT sensors  equipped machines to monitor the **temperature**,  **absolute pressure** and its **motor power** in order to regulate the optimal conditions for the production.
 
 ### Business challenge
 - You must think of an IoT product, develop it, simulate its use and present it as SaaS.
@@ -189,7 +189,7 @@ python main.py -t <topcontainers> -e <elapsedtime> -i <imagename>
 
 By now, the data from the machine should be published in GCP and be filled in the table in BigQuery. 
 
-### 7. Visualize data from BigQuery with Looker Studio
+### 9. Visualize data from BigQuery with Looker Studio
 - Go to [**Looker Studio**](https://lookerstudio.google.com/u/0/). Link your BigQuery table.
 - Create a Dashboard as shown below, which represents temperature and pressure and the motor power of the machine.
 
